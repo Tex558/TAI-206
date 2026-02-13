@@ -1,0 +1,21 @@
+#Se importa la imagen ya creada de docker para usar como base
+FROM python:3.12-slim
+
+#crear carpeta de trabajo
+WORKDIR /app
+
+#copia de requerimientos
+COPY requirements.txt .
+
+#instalacion / el -r es para remover los archivos previos a la instalacionel 
+#-no-cache-dir es para eliminar cache y que el contenedor no este pesado
+RUN pip install --no-cache-dir -r requirements.txt 
+
+#copiar el codigo del proyecto, el primer app es el proyecto que se tiene el segundo app es la direccion creada detro del contenedor
+COPY ./app ./app
+
+#Exponer el puerto de trabajo
+EXPOSE 5000
+
+#Comandos para ejecutar FastAPI / el 0.0.0.0 se refiere a que se trabajara local host
+CMD ["uvicorn","app.main:app","--host","0.0.0.0", "--port","5000","--reload"]
