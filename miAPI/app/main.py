@@ -2,6 +2,7 @@
 from fastapi import FastAPI,status,HTTPException
 import asyncio
 from typing import Optional
+from pydantic import BaseModel,Field
 
 #Inicializacion / instancia de la API se accede con /docs y la documentacion para usuarios es /redoc
 app= FastAPI(
@@ -15,7 +16,13 @@ usuarios=[
     {"id":2, "nombre":"Mau", "edad":21},
     {"id":3, "nombre":"Saul", "edad":24},
 ]
-    
+
+#Modelo de validacion Pydantic
+class UsuarioBase (BaseModel):
+    id:int = Field(...,gt=0,description="Identificador de usuario",example="1")
+    nombre:str = Field(...,min_length=3, max_length=50, description="Nombre del usuario",example="Emiliano")
+    edad:int = Field(...,ge=0,le=121,description= "Edad validada entre 0 y 121",example="21")
+
 #Endpoints
 @app.get("/", tags=['Inicio'])
 async def holamundo():
@@ -56,9 +63,9 @@ async def consultaUsuarios():
     }
 
 @app.post("/v1/usuarios/", tags=['CRUD Usuarios'])
-async def agregar_usuarios(usuario:dict):
+async def agregar_usuarios(usuario:UsuarioBase):
     for usr in usuarios: 
-        if usr["id"] == usuario.get("id"):
+        if usr["id"] == usuario.id:
             raise HTTPException(
                 status_code=400,
                 detail= "El id ya existe"
