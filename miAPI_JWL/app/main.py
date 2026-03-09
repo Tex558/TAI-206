@@ -147,4 +147,4 @@ async def eliminar_usuario(id: int, usuarioAuth: str = Depends(verificar_token))
                 "mensaje": f"Usuario eliminado exitosamente por {usuarioAuth}",
                 "status": "200"
             }
-    raise HTTPException(status_code=400, detail="Usuario no encontrado xddd")
+    raise HTTPException(status_code=400, detail="Usuario no encontrado")
