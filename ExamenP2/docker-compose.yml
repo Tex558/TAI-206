@@ -1,0 +1,9 @@
+services:
+  citas_api:
+    build: .
+    container_name: Examen2P
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app/app
+    
